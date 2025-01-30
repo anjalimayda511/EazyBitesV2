@@ -1,0 +1,81 @@
+/* Navbar Container */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  /* Left Section */
+  .nav-left {
+    flex: 1;
+  }
+  
+  .nav-brand {
+    font-size: 35px;
+    font-weight: bold;
+  }
+  
+  /* Center Section */
+  .nav-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .nav-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid black;
+  }
+  
+  /* Right Section */
+  .nav-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .nav-button {
+    padding: 5px 15px;
+    border: 1px solid black;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .nav-button:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .nav-container {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .nav-left, .nav-right {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin: 5px 0;
+    }
+  
+    .nav-center {
+      order: -1; /* Puts logo at the top */
+    }
+  
+    .nav-button {
+      font-size: 12px;
+      padding: 5px 10px;
+    }
+  }
+  
