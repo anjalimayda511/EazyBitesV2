@@ -4,8 +4,8 @@
     justify-content: space-between;
     /* align-items: center; */
     padding: 50px;
-    height: 65vh;
-    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    height: 70vh;
+    background: linear-gradient(135deg, #b4543c, #f69c58);
     color: white;
     position: relative;
 }
@@ -17,8 +17,9 @@
 }
 
 .hero-title {
-    font-size: 32px;
+    font-size: 40px;
     font-weight: bold;
+    margin-top: 5px;
     margin-bottom: 10px;
 }
 
@@ -70,14 +71,27 @@
 .hero-signup {
     flex: 1;
     padding: 30px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
     text-align: center;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    padding-top: 100px;
+    
+    /* Glassmorphism Effect */
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    
+    /* Background Image */
+    background-image: url('C:\Users\asus\Desktop\WebEngineeringProject\server\client\public\images\food_bg_morph.avif');
+    background-size: cover;
+    background-position: center;    
 }
 
+
 .hero-signup h2 {
-    font-size: 24px;
+    font-size: 30px;
     margin-bottom: 20px;
 }
 
