@@ -2,8 +2,16 @@ import React from "react";
 import { motion } from "framer-motion";
 import FloatingImage from "../FloatingImage/FloatingImage";
 import "./HeroSection.css";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+
+  const navigate = useNavigate();
+
+  const handleSignup = (type) => {
+    navigate(`/signup?type=${type}`);
+  };
+
   return (
     <section className="hero-container">
       {/* Left Side - Floating Images */}
@@ -32,8 +40,8 @@ const HeroSection = () => {
         transition={{ duration: 0.8 }}
       >
         <h2>Get Started Today</h2>
-        <button className="hero-button">Signup as Foodie</button>
-        <button className="hero-button">Signup as Food Seller</button>
+        <button className="hero-button" onClick={() => handleSignup("Foodie")}>Signup as Foodie</button>
+        <button className="hero-button" onClick={() => handleSignup("Food Seller")}>Signup as Food Seller</button>
       </motion.div>
 
       {/* Scroll Indicator */}

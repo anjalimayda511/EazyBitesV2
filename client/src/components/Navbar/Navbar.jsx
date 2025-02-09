@@ -6,7 +6,7 @@ const Navbar = () => {
     <nav className="nav-container">
       <div className="nav-left">
         {/* <span className="nav-brand">EazyBites</span> */}
-        <img src="images/EazyBites.png" className="nav-name" />
+        <img src="images/EazyBites.png" className="nav-name" alt="logo" />
       </div>
       <div className="nav-center">
         <img src="final_logo.png" alt="Logo" className="nav-logo" />
