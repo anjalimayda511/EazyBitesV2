@@ -6,14 +6,14 @@ import {
     RecaptchaVerifier, 
     signInWithPhoneNumber 
 } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import "./Signup.css";
+import { useNavigate } from "react-router-dom";
 
-// Function to initialize reCAPTCHA properly
 const setupRecaptcha = () => {
-    // Prevent multiple instances
     if (!window.recaptchaVerifier) {
         window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
             size: "invisible",
@@ -25,6 +25,7 @@ const setupRecaptcha = () => {
 };
 
 const Signup = () => {
+    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const [signupType, setSignupType] = useState("Foodie");
     const [username, setUsername] = useState("");
@@ -56,11 +57,26 @@ const Signup = () => {
         return () => clearInterval(interval);
     }, [timer]);
 
+    const saveUserToFirestore = async (user, isGoogleSignup) => {
+        const userDoc = isGoogleSignup
+            ? {
+                  email: user.email || "",
+                  displayName: user.displayName || "",
+                  photoURL: user.photoURL || "",
+                  signupType: signupType,
+                  username: username.trim() || user.displayName || "Anonymous User",
+                  createdAt: user.metadata.creationTime,
+              }
+            : {
+                  phoneNumber: user.phoneNumber || "",
+                  signupType: signupType,
+                  username: username.trim() || "Anonymous User",
+                  createdAt: new Date(),
+              };
+        await setDoc(doc(db, "users", user.uid), userDoc);
+    };
+
     const handleGoogleSignup = async () => {
-        if (!username.trim()) {
-            alert("Please enter a username");
-            return;
-        }
         if (!acceptedTerms) {
             alert("Please accept the Terms and Conditions");
             return;
@@ -69,16 +85,13 @@ const Signup = () => {
         try {
             const result = await signInWithPopup(auth, provider);
             console.log("Google User:", result.user);
+            await saveUserToFirestore(result.user,true);
         } catch (error) {
             console.error("Google Signup Error:", error);
         }
     };
 
     const sendOTP = async () => {
-        if (!username.trim()) {
-            alert("Please enter a username");
-            return;
-        }
         if (!phone) {
             alert("Please enter a valid phone number");
             return;
@@ -141,6 +154,7 @@ const Signup = () => {
 
         try {
             const result = await confirmationResult.confirm(otp);
+            await saveUserToFirestore(result.user, false);
             console.log("Phone User:", result.user);
         } catch (error) {
             console.error("OTP Verification Error:", error);
@@ -156,7 +170,7 @@ const Signup = () => {
                 <input
                     className="signup-input"
                     type="text"
-                    placeholder="Enter username"
+                    placeholder="Enter username (Optional)"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     disabled={isVerifying}
@@ -190,16 +204,20 @@ const Signup = () => {
                 </label>
             </div>
 
-            {!isVerifying && (
-                <>
-                    <button 
-                        className="signup-google-btn" 
-                        onClick={handleGoogleSignup}
+            <div className="terms-container">
+                <label className="terms-label">
+                    <input
+                        type="checkbox"
+                        checked={acceptedTerms}
+                        onChange={(e) => setAcceptedTerms(e.target.checked)}
                         disabled={isVerifying}
-                    >
-                        Sign Up with Google
-                    </button>
-                    
+                    />
+                    I accept the Terms and Conditions
+                </label>
+            </div>
+
+            {!isVerifying && (
+                <>                    
                     <div className="signup-phone-container">
                         <PhoneInput
                             country={'in'}
@@ -219,6 +237,17 @@ const Signup = () => {
                             Send OTP
                         </button>
                     </div>
+                    <div>
+                        <p className="signup-or-divider" id="or">OR</p>
+                    </div>
+                    <button 
+                        className="signup-google-btn"
+                        onClick={handleGoogleSignup}
+                        disabled={isVerifying}
+                    >
+                        <img src="/images/googleLogo.png" alt="Google logo" className="google-logo" />
+                        Sign Up with Google
+                    </button>
                 </>
             )}
 
@@ -252,17 +281,9 @@ const Signup = () => {
                     )}
                 </div>
             )}
-
-            <div className="terms-container">
-                <label className="terms-label">
-                    <input
-                        type="checkbox"
-                        checked={acceptedTerms}
-                        onChange={(e) => setAcceptedTerms(e.target.checked)}
-                        disabled={isVerifying}
-                    />
-                    I accept the Terms and Conditions
-                </label>
+            <div className="signup-login-container">
+                <p className="signup-login-text">Already have an account?</p>
+                <button className="signup-login-btn" onClick={() => navigate("/login")}>Login</button>
             </div>
 
             <div id="recaptcha-container"></div>
